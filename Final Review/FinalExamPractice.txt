@@ -1,0 +1,455 @@
+In general, be familiar with the basic commands, and their common options and uses:
+man <term> - manual page for <term>
+cd or cd ~ = cd $HOME
+Root = /
+cat = print or cat more/less (Less is more)
+tar -cfv <out> <files>
+mv <source> <dest>
+cp <^> <^>
+ls = list (-a = all(hidden), -l = long, -h = human readable)
+rm -rf -i (i=sure?, r=recursive, f=force)
+What is a path?*
+The navigation through folders to get to where a file is located
+Where can paths be applied with the commands above?
+See paths above
+What is a users home directory?*
+the main directory holding all of a users files
+How can we refer to the home directory?
+Using the ~
+Basics of file permissions e,g. what does it mean to be able to read, write, or execute?
+read = can take in data from a file
+write = can write text to an output file
+execute = can run a file from the code
+User, Group, Other   421
+chmod (W+R+E)[421] <file> (W+R=6)
+How can you copy to and from a remote server, like rlogin, from the command line? 
+ssh <user>@<host>
+rlogin specific = ssh <user>@rlogin.cs.vt.edu
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 3: C Basics
+
+What are the primitive types in C?
+int
+char
+double
+float
+long
+What are their typical sizes in bytes?
+Int: 4 bytes = 32 bits 
+Short: 2 bytes = 16 bits
+Long: 8 bytes = 64 bits
+Float: 4 bytes = 32 bits
+Double: 8 bytes = 64 bits 
+Char: 1 byte = 8 bits
+8 Bits = Byte
+Nybble = 4 Bits
+What are the basic control structures?*
+Check This*
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 4: I/O Basics
+
+What is the basic command to output data?
+printf or fprintf
+What is the basic command to read in data?
+scanf or fscanf
+What are the common format strings, e.g. for integers, strings, characters?
+%d = integer
+%s = string
+%c = char
+What is the name for keyboard input?
+stdin
+What are the names for output to the terminal?
+stdout
+What is the intended difference?*
+Check This*
+If you want to open a file for input, how do you do that?
+FILE* in = fopen(<filename>)
+If you want to open a file for output, how do you do that?
+FILE* out = fopen(<filename>)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 5: GCC Basics
+
+What is the most basic command to compile?
+gcc -std=c11 main.c
+What does that most basic command call the output file?
+a.out
+What options do we normally use?
+-Wextra, -Werror, -Wall, -std=c11
+How can you add the debugging symbols?
+-g in the compile statement
+What are the basic steps in compiling and linking?
+PreCompiler - Compiler - Assembler - Linker
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 6: Functions
+
+What do you have to do first so you can use a function?*
+declare the function
+If a function needs to modify a parameter, and you want the caller to "know" about the change, what do you add to the parameter to allow for this?*
+have a pointer in the parameter*
+When you call a function that uses pass-by-pointer, what is the easiest way to provide the pointer the function needs?*
+dereference/value = *x
+address = &x
+pointer casting = (int *)x 
+To get X bytes of a pointer: *(uintX_t *)p 
+    p = pointer, uintX_t = type(uint8_t)
+e.g. int x; function f(int *x); f(???);
+What is the default passing mechanism for parameters for functions?
+pass-by-copy
+What are the arguments to main?
+int main(int argc, char *argv[]){} - argc = # of args, argv = array of args
+How do we use header files to declare functions? What is the difference between #include with "" vs. <>?
+just put the function header in the header file and make sure you #include it on the other files
+"" for files
+<> for libraries
+Topics 7 and 8. Skip (these were historically Bash and GDB, so those topics will slot in here)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+GDB:
+
+How do we run GDB?
+gdb <file>
+What are the basic navigational commands in GDB?
+./exe to start
+r=run <args>
+to break <file:line>/func
+bt/backtrace = find crash
+s = step into
+n = step over
+list = show code
+display x = show x
+How do we view the stack trace when our program crashes in GDB?**
+have a breakpoint and use bt to backtrace**
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Bash and Makefiles:*
+REVIEW THIS!!
+What is the purpose of a Bash script?
+to automate the running compiling and running of files with certain instructions
+How can we write basic Bash scripts?*
+Not entirely sure what to put as an answer
+What is the purpose of a Makefile?*
+allow for quick compilation and running of files
+How can we write Makefiles?*
+Check This
+What are the parts of a Makefile?*
+Target
+Dependencies 
+Commands 
+Rule
+Only runs when dependency>target.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 9: Identifier Attributes
+
+What are the rules for naming an identifier?*
+cannot begin with numbers or special characters
+others idk off top of my head
+Is a given identifier name valid? dave, _dave, 3dave, d&ve, s3nger, senger!
+What is the general definition of scope for a variable?
+scope is the parts of the code where a variable is valid to be used
+What is the general definition of lifetime for a variable?
+A variables time in memory
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 10: Arrays and Topic 11: Pointers****
+
+1. How passing pointers into a function works *
+
+How "multiple return" works*
+
+A high-level understanding of what a pointer is
+How to access and work with an array in C (hint: it is very similar to Java)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 12: Strings
+
+What is a string in C?
+an array of chars
+How can you create a string?
+char <varname>[<size>]
+What do strings end with?
+[]
+What are the basic string functions?
+strcmp
+strlen
+etc.
+Why are C string dangerous?**
+IDK*
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 13: Arrays and Pointers
+
+Know how to create an array both statically and dynamically.
+How do you free a dynamically allocated array?
+What does free do, or not do, to a pointer after it is called?
+What is the [ ] notation really doing?*
+Creates a pointer I think
+What is a memory leak?
+Means all memory that was allocated was not properly freed before the program finished running
+What tool do we use to help detect memory leaks?
+valgrind
+How do you use realloc and what is it used for?
+call realloc(*ptr, size_t size)
+It is used for deallocating the memory from an old pointer and then returning a pointer
+to a new object of the size specified in the parameter
+NOTE: It is only used for dynamically allocated memory
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 14: Pointer Finale****HELP
+
+How can consts be used with pointers?
+You can have a pointer point to a constant variable meaning the value of the pointer will not change
+const targets
+
+const pointers
+
+all const
+
+What is pointer casting?
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 15: Numeric Bases
+
+What are the common bases used in computer science?
+2, 8, 10, 16
+How do you convert from one base to another?**
+    (1) Binary-> Hex
+        (a) Group chunks of 4 bits to convert to hex
+        0001 0010 0000 1010 1101 (2)
+          1   2    0    A    D (16)
+    (2) Binary -> Twos compliment (Signed, negative)
+        (a) Take binary
+        (b) Flip the bits
+        (c) Add 1 on right side (+, no new bits)
+    (4) Twos compliment -> Binary
+        (a) If left most bit is 1, then it is negative (FLIP BITS, ADD 1)
+        (b) If left most bit is 0, then treat it as normal binary
+    (3) Decimal -> binary / any radix 2-9
+        (a) Divide by 2, set as 1 if remainder=1, stop when dividend(result) is <= 0, read backwards 
+        (b) For radix >2, do the same but take (remainder * radix) as the digit to write down (rounded)
+What are the hexadecimal numbers and their related 4 bit binary representations?
+HELP
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 16: Data Representation
+
+What is a bit?
+A binary digit, the smallest unit of data that a computer can process and stored
+What is a byte?
+8 bits = used to represent characters
+What is half a byte?
+A nybble which is 4 bits
+What is a signed number vs. an unsigned number?
+Signed numbers can be negative, unsigned cannot be
+Unsigned only contains zeroes or positive numbers
+Signed numbers has positive, negative, and zero
+Said differently, how does a number being signed or unsigned impact the range of values that can be represented?
+If a value is unsigned it cannot be represented properly if it is negative
+How does the size of the data type impact the range of numbers that can be represented? 
+
+How are negative integers stored in a computer?
+Usings two's complement
+What is the process for determining the value of a negative integer?**
+
+What is big- and little-endian, and what effect does it have on the stored data?
+Big-endian: MSB at lowest memory address, LSB at highest; e.g., 0x12345678 → [0x12, 0x34, 0x56, 0x78].
+Big-endian = larger values stored first
+Little-endian: LSB at lowest memory address, MSB at highest; e.g., 0x12345678 → [0x78, 0x56, 0x34, 0x12]. 
+Little-endian - smaller values stored first
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 17: Bitwise Operators
+
+What are the bitwise operators in C?
+
+Note: the 'l' signifies a type long
+
+andl source, destination === destination = destination & source     (AND)
+
+orl source, destination === destination = destination | source      (OR)
+
+xorl source, destination === destination = destination ˆ source     (XOR)
+
+notl destination === destination = ~destination                     (~ = NOT)
+
+What is the effect of shifting an integer to the left? to the right?
+
+Each left shift doubles the number
+
+
+What happens when you shift a signed integer to the right? an unsigned integer to the right?
+Right Shifts:
+sarl will not work for division by powers of 2 if
+1. The value is interpreted as signed, and the left most bit is 1
+2. The value is interpreted as unsigned, and the left most bit is 1
+
+What is the endedness of a system?
+
+What is big ended? What is little ended?
+
+How can you set (make a bit 1) or unset (make a bit 0) certain bits in a number?
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 18: Structs **
+
+What is a struct?
+
+How do you create a struct?
+
+What types are allowed to be stored in a struct?
+
+What operations are allowed/disallowed on structs?
+
+How do you set or retrieve a value from a struct?
+
+What if you have a pointer to a struct, how do you access the fields in the struct?
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 19: Overview of x86_64 Assembly
+
+Who designed our computer architecture?
+What major units does our computer process consist of?
+
+What was the first processor in the line of x86 processors?
+Intel 8086
+What are the major registers and what are they used for?*
+
+What are the 16 bit registers? 32 bit registers? 64 bit registers?
+16 - ax
+32 - eax  
+64 - rax
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 20: x86_64 Basics
+
+What major style of assembly syntax do we use?
+AT&T
+What do the single letter suffixes on our commands mean?
+the size of the operands ("b" = byte, "w" = word, etc.)
+What is the %rsp? %rbp? 
+rsp = stack pointer (64 bit)
+rbp = base pointer (64 bit)
+What direction does our stack "grow"?
+downward
+For our commands, what is the meaning of the first and second operands?
+
+How can different values be represented, e.g. decimal, hex, etc.?
+
+What are the basic math commands?
+See literally same question right below
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 21: x86_64 Math
+
+What are the basic math commands?
+add<type> = add === destination = destination + source
+sub<type> = subtract === destination = destination - source
+imul<type> = integer multiplication === destination = destination * source
+neg<type> = negate(make negative) === destination = -destination
+inc<type> = increase by one === destination = destination + 1
+dec<type> = decrease by one === destination = destination - 1
+
+Types, l = long, etc.
+How can shifting be used to replace some of the basic math commands?
+
+sall source, destination === destiniation = destination << source
+
+sarl source, destination === destiniation = destination >> source (shifts in sign bit)
+
+shll source, destination === destiniation = destination << source (shifts in 0s like sall)
+ 
+shrl source, destination === destiniation = destination >> source (shifts in 0s)
+
+Shifting an integer value to the left has the affect of multiplying the operand by 2n where n is the value
+used for shifting
+
+Key take away: sarl shifts in the MSB and shrl shifts in 0s
+You cannot effectively use shifts for division
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 22: x86_64 Control Structures
+
+What is a control structure in general? e.g. not even just in assembly, but what is the definition of a control structure?
+A control structure is an instruction that alters the typical sequential flow of control
+What command(s) is(are) used to represent C control structures in assembly?
+
+How can you tell if there is a loop? 
+
+How can you tell what kind of loop it is?
+
+How can you tell if there is a selection statement?
+
+How can you tell if there is an else statement?
+
+What are the various jump commands?
+je/jz ZF jump equal/zero
+jne/jnz ~ZF jump if not equal/not zero
+js SF jump if negative
+jns ~SF jump if non-negative
+jg/jnle ~(SFˆOF)&~SF jump if greater (signed)
+jge/jnl ~(SFˆOF) jump if greater or equal (signed)
+jl/jnge SFˆ0F jump if less than (signed)
+jle/jng (SFˆ0F)|SF jump if less or equal (signed)
+ja/jnbe ~CF&~ZF jump if greater (unsigned)
+jae/jnb ~CF jump if greater or equal (unsigned)
+jb/jnae CF jump if less than (unsigned)
+jbe/jna CF|ZF jump if less than or equal (unsigned)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 23: x86_64 Functions
+
+What does the calling function do to call a function?
+stores the address of the next instruction on the stack then enters the function
+What does the call function do that is "hidden" in the call command?*
+
+What happens when a function is entered?*
+
+What happens to the base pointer?*
+
+What happens to the stack pointer?*
+
+How many bytes are in the stack frame?
+16
+What does the pushq command do?
+pushes a pointer onto the stack so the address can be returned to later
+What does the popq command do?
+removes a pointer from the top of the stack so it can be returned t
+What does the leave command do?
+sets %rsp to %rbp, then pops the top of the stack into %rbp
+What does the ret command do?
+return
+What registers are used for passing parameters?
+rdi,rsi,rdx,rcx,r8,r9
+edi, esi, etc
+If all of those are used, where do extra parameters go?
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Topic 24: x86_64 Pointers 
+
+What is a pointer in assembly?
+Pointers in x86-64 are a form of indirect address
+What is the general formula for computing an address?*
+General form for addressing is:
+D(Rb, Ri, S) = Rb + (Ri*S) + D
+• D - displacement
+• Rb - Base register
+• Ri - Index register
+• S - scale, 1,2,4, or 8
+What is leaq?
+"load effective address"
+How is it used?
+
+How do assembly pointers let us move around in stack memory?
