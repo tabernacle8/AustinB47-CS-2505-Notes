@@ -61,9 +61,9 @@ What are the common format strings, e.g. for integers, strings, characters?
 What is the name for keyboard input?
 stdin
 What are the names for output to the terminal?
-stdout
+stdout, stderr
 What is the intended difference?*
-Check This*
+Stdout = General output, Stderr = Only error messages
 If you want to open a file for input, how do you do that?
 FILE* in = fopen(<filename>)
 If you want to open a file for output, how do you do that?
@@ -74,7 +74,7 @@ FILE* out = fopen(<filename>)
 Topic 5: GCC Basics
 
 What is the most basic command to compile?
-gcc -std=c11 main.c
+gcc main.c
 What does that most basic command call the output file?
 a.out
 What options do we normally use?
@@ -93,7 +93,7 @@ declare the function
 If a function needs to modify a parameter, and you want the caller to "know" about the change, what do you add to the parameter to allow for this?*
 have a pointer in the parameter*
 When you call a function that uses pass-by-pointer, what is the easiest way to provide the pointer the function needs?*
-dereference/value = *x
+Pass with &, so foo(&x)
 address = &x
 pointer casting = (int *)x 
 To get X bytes of a pointer: *(uintX_t *)p 
@@ -116,9 +116,9 @@ GDB:
 How do we run GDB?
 gdb <file>
 What are the basic navigational commands in GDB?
-./exe to start
+gdb {file} to start
 r=run <args>
-to break <file:line>/func
+break/bp = to break <file:line>/func
 bt/backtrace = find crash
 s = step into
 n = step over
@@ -133,11 +133,19 @@ REVIEW THIS!!
 What is the purpose of a Bash script?
 to automate the running compiling and running of files with certain instructions
 How can we write basic Bash scripts?*
-Not entirely sure what to put as an answer
+1) write #!/bin/bash at top
+2) all commands are linux commands, so you can automate stuff
+3) $# = # of arguments, $? return of last command, 
 What is the purpose of a Makefile?*
 allow for quick compilation and running of files
 How can we write Makefiles?*
-Check This
+1) First line: outputFileName (out.o): Arguments (out.c)
+	second line: gcc filename (out.c) 
+2) Essentially, whenever another part of the makefile calls for out.o, it runs gcc with our arguments
+   So, you can have one "master" compile that just references everything else
+   Example: myProject: out.o hello.o (Each have their own definitions like in 1) )
+            gcc -o myProject out.o hello.o
+
 What are the parts of a Makefile?*
 Target
 Dependencies 
@@ -150,8 +158,10 @@ Topic 9: Identifier Attributes
 
 What are the rules for naming an identifier?*
 cannot begin with numbers or special characters
-others idk off top of my head
+Variables start with A-Z/_
+Variables end with A-Z/0-9/_
 Is a given identifier name valid? dave, _dave, 3dave, d&ve, s3nger, senger!
+                                    Y     Y      N     N      Y      N
 What is the general definition of scope for a variable?
 scope is the parts of the code where a variable is valid to be used
 What is the general definition of lifetime for a variable?
@@ -161,11 +171,14 @@ A variables time in memory
 Topic 10: Arrays and Topic 11: Pointers****
 
 1. How passing pointers into a function works *
+You pass it like anything normal, just as a pointer
 
 How "multiple return" works*
+Just return a pointer to an array of data
 
 A high-level understanding of what a pointer is
 How to access and work with an array in C (hint: it is very similar to Java)
+It points to memory, and that memory has data in it
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -176,43 +189,42 @@ an array of chars
 How can you create a string?
 char <varname>[<size>]
 What do strings end with?
-[]
+\n
 What are the basic string functions?
 strcmp
 strlen
 etc.
 Why are C string dangerous?**
-IDK*
+Because if you forget/delete the \n, you can index a string out of bounds and thats unsafe
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 Topic 13: Arrays and Pointers
 
 Know how to create an array both statically and dynamically.
+1) int static_array[5];
+2) int *dynamic_array = (int *) malloc(size * sizeof(int));
 How do you free a dynamically allocated array?
+Call free(array)
 What does free do, or not do, to a pointer after it is called?
+It marks the pointer as available for writing, but wont clear it out
 What is the [ ] notation really doing?*
-Creates a pointer I think
+arr[2] = *(arr + 2) (Dereference pointer at 2*sizeof(datatype))
 What is a memory leak?
 Means all memory that was allocated was not properly freed before the program finished running
 What tool do we use to help detect memory leaks?
 valgrind
 How do you use realloc and what is it used for?
 call realloc(*ptr, size_t size)
-It is used for deallocating the memory from an old pointer and then returning a pointer
-to a new object of the size specified in the parameter
+It is used for resizing a pointer without changing the address
 NOTE: It is only used for dynamically allocated memory
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 Topic 14: Pointer Finale****HELP
 
 How can consts be used with pointers?
-You can have a pointer point to a constant variable meaning the value of the pointer will not change
-const targets
-
-const pointers
-
-all const
-
+int * const ptr; Why you would want to do this I have no clue
+You can have a pointer point to a constant MEMORY ADDRESS meaning the ADDRESS of the pointer will not change
 What is pointer casting?
+Talked about above (casting to larger types)
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 Topic 15: Numeric Bases
@@ -235,7 +247,8 @@ How do you convert from one base to another?**
         (a) Divide by 2, set as 1 if remainder=1, stop when dividend(result) is <= 0, read backwards 
         (b) For radix >2, do the same but take (remainder * radix) as the digit to write down (rounded)
 What are the hexadecimal numbers and their related 4 bit binary representations?
-HELP
+Any number from 0-9 is just 0x#, but 11 onwards is A-Z
+Ex: 0x9 = 9, 0xA = 11, 0x2B = 2(12) = 0010 1100
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 Topic 16: Data Representation
@@ -250,19 +263,23 @@ What is a signed number vs. an unsigned number?
 Signed numbers can be negative, unsigned cannot be
 Unsigned only contains zeroes or positive numbers
 Signed numbers has positive, negative, and zero
-Said differently, how does a number being signed or unsigned impact the range of values that can be represented?
-If a value is unsigned it cannot be represented properly if it is negative
+
 How does the size of the data type impact the range of numbers that can be represented? 
+1) Given N bits, we can store:
+    a) Unsigned: 0 to (2^N)-1
+    b) Signed: -(2^(N-1)) to 2^(N-1)-1
 
 How are negative integers stored in a computer?
 Usings two's complement
 What is the process for determining the value of a negative integer?**
+ a) If left most bit is 1, then it is negative (FLIP BITS, ADD 1)
+ b) If left most bit is 0, then treat it as normal binary
 
 What is big- and little-endian, and what effect does it have on the stored data?
 Big-endian: MSB at lowest memory address, LSB at highest; e.g., 0x12345678 → [0x12, 0x34, 0x56, 0x78].
 Big-endian = larger values stored first
 Little-endian: LSB at lowest memory address, MSB at highest; e.g., 0x12345678 → [0x78, 0x56, 0x34, 0x12]. 
-Little-endian - smaller values stored first
+Little-endian - smaller values stored first (linux)
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 Topic 17: Bitwise Operators
 
@@ -300,27 +317,42 @@ How can you set (make a bit 1) or unset (make a bit 0) certain bits in a number?
 Topic 18: Structs **
 
 What is a struct?
+Essentially like a class in Java, holds specific data for an object
 
 How do you create a struct?
+I stole this from w3 schools btw
+1) struct myStructure s1;
+2) struct MyStructure {   
+  int myNum;           
+  char myLetter;      
+}; 
 
 What types are allowed to be stored in a struct?
+Literally almost anything
 
 What operations are allowed/disallowed on structs?
+You cant directly do much to structs (s1+s2) is a nono 
+What you can do is stuff on fields like (s1.a + s2.a)
 
 How do you set or retrieve a value from a struct?
+Static: struct.field
+Pointer: struct->field
 
 What if you have a pointer to a struct, how do you access the fields in the struct?
+Pointer: struct->field
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 Topic 19: Overview of x86_64 Assembly
 
 Who designed our computer architecture?
+John Von Neuman, Processor based off of: Intel 8086
 What major units does our computer process consist of?
-
+Bytes
 What was the first processor in the line of x86 processors?
 Intel 8086
 What are the major registers and what are they used for?*
+Does not matter we get a chart, but eax is for math operations
 
 What are the 16 bit registers? 32 bit registers? 64 bit registers?
 16 - ax
@@ -342,13 +374,13 @@ rbp = base pointer (64 bit)
 What direction does our stack "grow"?
 downward
 For our commands, what is the meaning of the first and second operands?
-
+Source, Destination
 How can different values be represented, e.g. decimal, hex, etc.?
-
+Everything is hex, aka $0x4123
 What are the basic math commands?
 See literally same question right below
 
-
+ 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 Topic 21: x86_64 Math
